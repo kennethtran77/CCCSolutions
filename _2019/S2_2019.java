@@ -32,7 +32,7 @@ public class S2_2019 {
         
         // Sieve of Eratosthenes
         for (int i = 2; i < Math.sqrt(n); i++) { // Start i at 2, increment by 1 until the square root of n
-            if (sieve[i] == false) { // If i is marked as false
+            if (!sieve[i]) { // If i is marked as false
                 for (int j = i * i; j < n; j += i) { // Start at the square of i, then loop through all multiples of i and mark them as true
                     sieve[j] = true;
                 }
@@ -43,7 +43,7 @@ public class S2_2019 {
         
         // Check values from 2 to N
         for (int i = 2; i <= n; i++) {
-            if (sieve[i] == false) {
+            if (!sieve[i]) {
                 primes.add(i); // Add the prime to an ArrayList
             }
         }
