@@ -12,8 +12,8 @@ import java.util.Set;
  */
 public class J5_2019 {
 
-    // Simply represents a step
-    public static class Step {
+    // Represents a step containing the rule that was applied, the index at which it was applied, and the result
+    private static class Step {
         
         public int rule;
         public int index;
@@ -28,7 +28,7 @@ public class J5_2019 {
     }
 
     // Returns a list of integers containing the indices where the substring is located
-    public static List<Integer> getOcurrencesIndices(String string, String substring) {
+    private static List<Integer> getOcurrencesIndices(String string, String substring) {
         List<Integer> indices = new ArrayList<>();
 
         int i = 0;
@@ -45,29 +45,18 @@ public class J5_2019 {
         return indices;
     }
     
-    // The path storing the final answer
-    static List<Step> path;
+    // Stores the three rules
+    private static String[][] rules;
+    
+    // Store a list of all failed cases, a String in the format of 'current state of string' + 'step'
+    private static Set<String> failed;
 
-    static String[][] rules;
-    
-    // Store a list of all failed cases, a String in the format of state of String+step
-    static Set<String> failed;
-    
-    static String end;
-    
-    // External flag to stop our recursion stack
-    static boolean stop;
-    
     // Finds the first correct path given an initial String and amount of steps
-    private static void check(String initial, int steps, List<Step> c) {
-        if (stop) // Clear recursion stack by returning if flag is true
-            return;
-
+    // 'c' just represents the current path at each step
+    private static List<Step> check(String initial, int steps, String end, List<Step> c) {
         if (steps == 0) { // Base case; if we used up all our steps
             if (c.get(c.size() - 1).result.equals(end)) { // If we found a correct path, i.e. last step = result
-                stop = true; // Flag to clear the recursion stack
-                path = new ArrayList<>(c); // Save the path
-                return;
+                return new ArrayList<>(c); // Return the path
             }
             
             // No correct path was found
@@ -76,7 +65,7 @@ public class J5_2019 {
             failed.add(initial + steps);
             
             c.remove(c.size() - 1); // Remove the last step from the current path, so we have room to try the next rule
-            return;
+            return null;
         }
         
         for (int i = 0; i < 3; i++) { // Check each rule
@@ -90,7 +79,12 @@ public class J5_2019 {
                 if (!failed.contains(result + (steps - 1))) { // Continue only if the next step is not a failed case
                     c.add(new Step(i + 1, j + 1, result)); // Add the step to the path
 
-                    check(result, steps - 1, c); // Recurse again until all steps are used up
+                    // Recurse again until all steps are used up
+                    List<Step> path = check(result, steps - 1, end, c);
+                    
+                    // If path does not return null, then we have our correct answer
+                    if (path != null)
+                        return path;
                 }
             }
         }
@@ -104,6 +98,8 @@ public class J5_2019 {
         // as the same time as the function pops off the stack
         if (c.size() > 0)
             c.remove(c.size() - 1);
+        
+        return null;
     }
     
     // Given a String, replace substring A with substring B at given index
@@ -124,11 +120,11 @@ public class J5_2019 {
         }
         
         int steps = scan.nextInt();
+        
         String initial = scan.next();
+        String end = scan.next();
         
-        end = scan.next();
-        
-        check(initial, steps, new ArrayList<>());
+        List<Step> path = check(initial, steps, end, new ArrayList<>());
         
         for (Step step : path) {
             System.out.println(step.rule + " " + step.index + " " + step.result);
