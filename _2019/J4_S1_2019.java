@@ -3,10 +3,10 @@ package _2019;
 import java.util.Scanner;
 
 /**
- * CCC 2019, S1
+ * CCC 2019, J4/S1
  * @author Kenneth Tran
  */
-public class S1_2019 {
+public class J4_S1_2019 {
     
     public static int[][] grid = new int[2][2];
     
