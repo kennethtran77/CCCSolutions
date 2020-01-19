@@ -33,8 +33,7 @@ public class S1_2016 {
 
         // p is used to count the # of characters in b that also appear in a
         int p = 0;
-        
-        
+
         // Find the # of intersecting chars
         for (char i : b) {
             for (int j = 0; j < a.length; j++) {
