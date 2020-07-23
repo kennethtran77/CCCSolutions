@@ -3,8 +3,7 @@ package _2020;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Arrays;
 
 /**
  * CCC 2020, S1
@@ -17,39 +16,28 @@ public class S1_2020 {
         
         int N = Integer.parseInt(br.readLine());
         
-        // A TreeMap will sort key value pairs in ascending order
-        TreeMap<Integer, Integer> map = new TreeMap<>();
+        int[][] speeds = new int[N][2];
         
         for (int i = 0; i < N; i++) {
             String[] x = br.readLine().split(" ");
-            map.put(Integer.parseInt(x[0]), Integer.parseInt(x[1]));
+            speeds[i][0] = Integer.parseInt(x[0]);
+            speeds[i][1] = Integer.parseInt(x[1]);
         }
+        
+        // Sort speeds in ascending order based on time
+        Arrays.sort(speeds, (a, b) -> a[0] - b[0]);
         
         double max = 0;
         
-        int[] time = new int[N];
-        int[] pos = new int[N];
-        
-        int i = 0;
-        
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            time[i] = entry.getKey();
-            pos[i] = entry.getValue();
-            
-            i++;
-        }
-        
-        for (int j = 1; j < N; j++) {
-            int x1 = time[j - 1];
-            int x2 = time[j];
-            int y2 = pos[j - 1];
-            int y1 = pos[j];
+        for (int i = 1; i < N; i++) {
+            int x1 = speeds[i - 1][0];
+            int x2 = speeds[i][0];
+            int y2 = speeds[i - 1][1];
+            int y1 = speeds[i][1];
 
             double speed = Math.abs((double) (y2 - y1) / (double) (x2 - x1));
 
-            if (speed > max) {
-                max = speed;
-            }
+            max = Math.max(speed, max);
         }
         
         System.out.println(max);
